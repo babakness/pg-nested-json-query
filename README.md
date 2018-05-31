@@ -20,15 +20,15 @@ Here is an example of a JSON query
 ```
 # Description
   
-  'table_name' - is the name of the table querying
+  `table_name` - is the name of the table querying
 
-  'children' - is an embedded query neste under the current table
+  `children` - is an embedded query neste under the current table
 
-  'conditions' - contains field keys with values that the field 
+  `conditions` - contains field keys with values that the field 
                   should equal. A leading '=' is implied if an
                   operator is not specified.
 
-  'conditionString' - raw unprocessed condition.
+  `conditionString` - raw unprocessed condition.
 
 # CLI Tool
 
