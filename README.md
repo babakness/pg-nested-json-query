@@ -8,13 +8,19 @@ Here is an example of a JSON query
 
 ```javascript
   {
-    table_name: {
-      fields: {
-        'id': 'sample_id'
+    "table_name": {
+      "fields": {
+        "id": "table_id"
       },
-      children: other_table,
-      conditionString: 'example_number = 1',
-      conditions: { boolean_field: true, number_field: '> 5' },
+      "children": {
+        "other_table": {
+          "fields": {
+            "id": "other_id"
+          }
+        }
+      },
+      "conditionString": "example_number = 1",
+      "conditions": { "boolean_field": true, "number_field": "> 5" }
     }
   }
 ```
