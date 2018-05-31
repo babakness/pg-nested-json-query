@@ -30,6 +30,42 @@ Here is an example of a JSON query
 
   `conditionString` - raw unprocessed condition.
 
+# Example
+
+```javascript
+
+import getQuery from 'pg-nested-json-query'
+
+const page_contents = {
+  page_content: {
+    name: 'contents',
+    fields: {
+      id: 'page_content_id',
+      name: 'page_content_name',
+    }
+  }
+}
+
+const query = {
+  pages: {
+    fields: {
+      id: 'page_id',
+      name: 'page_name',
+    },
+    children: page_contents,
+    conditions: { active: true },
+  },
+  galleries: {
+    fields: {
+      id: 'gallery_id',
+      name: 'gallery_name',
+    },
+    conditions: { active: true}
+  } 
+}
+
+
+```
 # CLI Tool
 
 This package provides a CLI in `bin` directory that takes JSON6 file as a query and writes and Postgres SQL query to STDIN.

@@ -1,12 +1,6 @@
 //@ts-check
-import { getQuery } from './lib/get-query'
-// import { trace } from './lib/functional'
+import getQuery from './lib/get-query'
 
-// const trace = data => console.log(data)
-
-// String.prototype.map = function(func) {
-//   return func(this)
-// }
 
 const page_contents = {
   page_content: {
@@ -25,17 +19,17 @@ const query = {
       name: 'page_name',
     },
     children: page_contents,
-    // conditionString: 'foobar = 99',
-    // conditions: { page_active_checkbox: true },
+    conditions: { active: true },
   },
   galleries: {
     fields: {
       id: 'gallery_id',
       name: 'gallery_name',
     },
-    // conditions: { gallery_active_checkbox: true, },
+    conditions: { active: true}
   } 
 }
+
 const trace = ( data ) => ( console.log(data), data )
 
 trace( getQuery( query ) ) 

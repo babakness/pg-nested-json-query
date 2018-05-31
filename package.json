@@ -1,5 +1,5 @@
 {
-  "name": "postgres-nested-json-to-sql-query-builder",
+  "name": "pg-nested-json-query",
   "version": "0.1.0",
   "description": "A tool to build Postgres queries that join nested queries into JSON structures",
   "main": "index.js",
