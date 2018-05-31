@@ -6,7 +6,7 @@ This library exports a function `getQuery` which takes a JSON query and returns 
 
 Here is an example of a JSON query
 
-```javascript
+```json
   {
     "table_name": {
       "fields": {
