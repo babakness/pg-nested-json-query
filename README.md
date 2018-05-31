@@ -64,6 +64,10 @@ const query = {
   } 
 }
 
+
+console.log( getQuery( query ) )
+
+
 ```
 
 Output
@@ -95,6 +99,11 @@ select json_build_object(
 # CLI Tool
 
 This package provides a CLI in `bin` directory that takes JSON6 file as a query and writes and Postgres SQL query to STDIN.
+
+Example use
+
+`npx pg-nested-json-query web-query.json | psql database > web-data.json`
+
 
 # MIT License (As-Is No Warranty Open License)
 
