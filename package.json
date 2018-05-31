@@ -1,0 +1,36 @@
+{
+  "name": "postgres-nested-json-to-sql-query-builder",
+  "version": "0.1.0",
+  "description": "A tool to build Postgres queries that join nested queries into JSON structures",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test-watch": "npm run test -- --watch",
+    "dev": "nodemon index.js",
+    "pg-nested-json-query": "pg-nested-json-query"
+  },
+  "bin":{
+    "pg-nested-json-query": "bin/pg-nested-json-query.js"
+  },
+  "engines": {
+    "node": ">=8.9.1"
+  },
+  "esm": {
+    "mode": "all"
+  },
+  "ava": {
+    "require": [
+      "@std/esm"
+    ]
+  },
+  "author": "Babak Badaei",
+  "license": "MIT",
+  "dependencies": {
+    "@std/esm": "^0.26.0",
+    "json-6": "^1.0.2"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "nodemon": "^1.17.5"
+  }
+}
