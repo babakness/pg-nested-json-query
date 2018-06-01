@@ -121,7 +121,7 @@ Options
 
   --file file       This is the default option and can be omitted.
   --type, -t type   Declare file format. Either "yaml", "json" or "json6".
-  --help, -h type   Opens this help screen, all other options are ignored.
+  --help, -h        Opens this help screen, all other options are ignored.
 ```
 
 
