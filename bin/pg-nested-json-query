@@ -69,7 +69,6 @@ const getOptions = optionDefinitions => {
   }
 }
 
-
 const options = getOptions( optionDefinitions )
 
 if( options.help || !options.file ) {
