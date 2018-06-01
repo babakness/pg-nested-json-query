@@ -34,9 +34,7 @@ const optionDefinitions = [
   { 
     name: 'help', 
     alias: 'h', 
-    type: String, 
     description: 'Opens this help screen, all other options are ignored.', 
-    typeLabel: '{underline type}',
   },
 
 ]
