@@ -58,14 +58,14 @@ const query = {
       name: 'page_name',
     },
     children: page_contents,
-    conditions: { active: true},
+    conditions: { active: true },
   },
   galleries: {
     fields: {
       id: 'gallery_id',
       name: 'gallery_name',
     },
-    conditions: { active: true}
+    conditions: { active: true }
   } 
 }
 
@@ -77,13 +77,13 @@ const cliPath = `${ basePath }/bin/pg-nested-json-query`
 
 
 test('Test sample query', t => {
-	t.deepEqual(getQuery(query).trim(), expectedSampleOutput)
+	t.deepEqual( getQuery( query ).trim(), expectedSampleOutput )
 });
 
 
 test('Test kitchen sink YAML example using CLI using `/usr/bin/env node`', t => {
 	t.deepEqual(
-    childProcess.execSync(`/usr/bin/env node ${ cliPath } ${ kitchenSyncQueryPath }`).toString().trim(), 
+    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ kitchenSyncQueryPath }` ).toString().trim(), 
     expectedKitchenSyncOutput
   )
 });
@@ -91,14 +91,14 @@ test('Test kitchen sink YAML example using CLI using `/usr/bin/env node`', t => 
 
 test('Test sample JSON query with CLI using `/usr/bin/env node`', t => {
 	t.deepEqual(
-    childProcess.execSync(`/usr/bin/env node ${ cliPath } ${ jsonQueryPath }`).toString().trim(), 
+    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ jsonQueryPath }` ).toString().trim(), 
     expectedSampleOutput
   )
 });
 
 test('Test sample YAML query with CLI using `/usr/bin/env node`', t => {
 	t.deepEqual(
-    childProcess.execSync(`/usr/bin/env node ${ cliPath } ${ yamlQueryPath }`).toString().trim(), 
+    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ yamlQueryPath }` ).toString().trim(), 
     expectedSampleOutput
   )
 });
