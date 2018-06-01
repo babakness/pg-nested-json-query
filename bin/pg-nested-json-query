@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-// initialize
+// Initialize
+//
 require = require('@std/esm')(module)
 const getSqlQuery = require('../lib/get-query.js').default
 const fs = require('fs')
@@ -10,7 +11,8 @@ const json6 = require('json-6')
 
 const script = process.argv[1].split('/').splice(-1)[0]
 
-// command line options
+// Command line options
+//
 const commandLineArgs = require('command-line-args')
 const getUsage = require('command-line-usage')
 const optionDefinitions = [
@@ -52,7 +54,6 @@ const usage = getUsage([
 
 ])
 
-
 // Handle bad options
 const getOptions = (optionDefinitions) => {
   try {
@@ -77,8 +78,8 @@ if(options.help || !options.file) {
 }
 
 // Helper functions
-
-const trace = (message) => (console.log(message), message)
+//
+const trace = message => (console.log(message), message)
 const badExit = message => trace(message) && process.exit(1)
 const errorEnding = obj => ( obj instanceof Error ) ? badExit(obj.message) : badExit(obj)
 const tryCatch = failCallback => testCallback => {
@@ -92,12 +93,12 @@ const endOnFail = tryCatch(errorEnding)
 
 // Ad-hoc Monad helpers
 class Identity { 
-  constructor(value){ this.$value = value}
-  join(){return this.$value}
-  map(fn){return Identity.of(fn(this.$value)) }
-  chain(fn){ return this.map(fn).join() } 
+  constructor( value ){ this.$value = value}
+  join(){ return this.$value}
+  map( fn ){ return Identity.of(fn(this.$value)) }
+  chain( fn ){ return this.map(fn).join() } 
 }
-Identity.of = (value) => new Identity(value)
+Identity.of = value => new Identity(value)
 const Nothing = { map: () => Nothing, join: () => Nothing, chain: () => Nothing }
 // Beware Just is instance of Identity
 class Just extends Identity {}
@@ -105,7 +106,7 @@ const Maybe = Just
 const unWrapMaybe = (maybe, nothingCallback) => maybe === Nothing ? nothingCallback() : maybe.join()
 
 // Core 
-
+//
 const extensions = {
   'yml': 'yaml',
   'yaml': 'yaml',
