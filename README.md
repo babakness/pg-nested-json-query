@@ -1,6 +1,6 @@
 # Intro
 
-This library exports a function `getQuery` which takes a JSON query and returns an Postgres SQL query to retrieve nested data in JSON form.
+This library exports a function `getQuery` which takes a data-structure as query and returns an Postgres SQL query to retrieve nested data in JSON form.
 
 # JSON Query
 
@@ -104,11 +104,25 @@ select json_build_object(
 ```
 # CLI Tool
 
-This package provides a CLI in `bin` directory that takes JSON6 file as a query and writes and Postgres SQL query to STDIN.
+This package provides a CLI in `bin` directory that can accept either a JSON, JSON6, or YAML file as a query and writes and Postgres SQL query to STDIN.
 
 Example use
 
-`npx pg-nested-json-query web-query.json | psql database > web-data.json`
+`npx pg-nested-json-query web-query.yaml | psql database > web-data.json`
+
+Here is the help screen for CLI tool
+
+```
+Usage
+
+  pg-nested-json-query query-file [options]
+
+Options
+
+  --file file       This is the default option and can be omitted.
+  --type, -t type   Declare file format. Either "yaml", "json" or "json6".
+  --help, -h type   Opens this help screen, all other options are ignored.
+```
 
 
 # MIT License (As-Is No Warranty Open License)
