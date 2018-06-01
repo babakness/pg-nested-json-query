@@ -1,11 +1,6 @@
 import test from 'ava';
 import getQuery from "../lib/get-query"
 
-
-
-
-
-
 const expectedOutput = `
 select json_build_object(
   'pages', array(
@@ -28,7 +23,6 @@ select json_build_object(
   )
 )
 `.trim()
-
 
 const page_contents = {
   page_content: {
