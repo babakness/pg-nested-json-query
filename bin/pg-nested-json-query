@@ -2,7 +2,7 @@
 
 // Initialize
 //
-require = require( '@std/esm' )( module )
+require = require( 'esm' )( module )
 const getSqlQuery = require( '../lib/get-query.js' ).default
 const fs = require( 'fs' )
 

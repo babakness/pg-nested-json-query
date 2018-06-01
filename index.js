@@ -1,2 +1,2 @@
-require = require('@std/esm')(module)
+require = require('esm')(module)
 module.exports = require('./main.js').default

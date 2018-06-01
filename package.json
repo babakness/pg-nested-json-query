@@ -28,21 +28,21 @@
   },
   "ava": {
     "require": [
-      "@std/esm"
+      "esm"
     ]
   },
   "author": "Babak Badaei",
   "license": "MIT",
   "dependencies": {
-    "@std/esm": "^0.26.0",
-    "bluebird": "^3.5.1",
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
+    "esm": "^3.0.43",
     "js-yaml": "^3.11.0",
     "json-6": "^1.0.2"
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "bluebird": "^3.5.1",
     "nodemon": "^1.17.5"
   }
 }
