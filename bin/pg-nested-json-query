@@ -2,19 +2,19 @@
 
 // Initialize
 //
-require = require('@std/esm')(module)
-const getSqlQuery = require('../lib/get-query.js').default
-const fs = require('fs')
+require = require( '@std/esm' )( module )
+const getSqlQuery = require( '../lib/get-query.js' ).default
+const fs = require( 'fs' )
 
-const yaml = require('js-yaml')
-const json6 = require('json-6')
+const yaml = require( 'js-yaml' )
+const json6 = require( 'json-6' )
 
-const script = process.argv[1].split('/').splice(-1)[0]
+const script = process.argv[ 1 ].split( '/' ).splice( -1 )[ 0 ]
 
 // Command line options
 //
-const commandLineArgs = require('command-line-args')
-const getUsage = require('command-line-usage')
+const commandLineArgs = require( 'command-line-args' )
+const getUsage = require( 'command-line-usage' )
 const optionDefinitions = [
   { 
     name: 'file', 
@@ -44,7 +44,7 @@ const optionDefinitions = [
 const usage = getUsage([
   {
     header: 'Usage',
-    content: `{cyan ${script}} query-file [options]`
+    content: `{cyan ${ script }} query-file [options]`
   },
   {
     header: 'Options',
@@ -55,48 +55,48 @@ const usage = getUsage([
 ])
 
 // Handle bad options
-const getOptions = (optionDefinitions) => {
+const getOptions = optionDefinitions => {
   try {
     return commandLineArgs(optionDefinitions)
   } catch (e) {
     if( e.name == 'UNKNOWN_OPTION' ) {
-      console.log(`Option name '${ e.optionName }' is unknown.  Here is the help menu.`)
-      console.log(usage)
+      console.log( `Option name '${ e.optionName }' is unknown.  Here is the help menu.` )
+      console.log( usage )
     } else {
       throw e
     }
-    process.exit(1)
+    process.exit( 1 )
   }
 }
 
 
-const options = getOptions(optionDefinitions)
+const options = getOptions( optionDefinitions )
 
-if(options.help || !options.file) {
-  console.log(usage)
+if( options.help || !options.file ) {
+  console.log( usage )
   process.exit()
 }
 
 // Helper functions
 //
-const trace = message => (console.log(message), message)
-const badExit = message => trace(message) && process.exit(1)
-const errorEnding = obj => ( obj instanceof Error ) ? badExit(obj.message) : badExit(obj)
+const trace = message => ( console.log( message ), message )
+const badExit = message => trace( message ) && process.exit( 1 )
+const errorEnding = obj => ( obj instanceof Error ) ? badExit( obj.message ) : badExit( obj )
 const tryCatch = failCallback => testCallback => {
   try{
     return testCallback()
   } catch(e) {
-    return failCallback(e)
+    return failCallback( e )
   }
 }
-const endOnFail = tryCatch(errorEnding)
+const endOnFail = tryCatch( errorEnding )
 
 // Ad-hoc Monad helpers
 class Identity { 
-  constructor( value ){ this.$value = value}
-  join(){ return this.$value}
-  map( fn ){ return Identity.of(fn(this.$value)) }
-  chain( fn ){ return this.map(fn).join() } 
+  constructor( value ){ this.$value = value }
+  join(){ return this.$value }
+  map( fn ){ return Identity.of( fn( this.$value ) ) }
+  chain( fn ){ return this.map( fn ).join() } 
 }
 Identity.of = value => new Identity(value)
 const Nothing = { map: () => Nothing, join: () => Nothing, chain: () => Nothing }
@@ -113,19 +113,21 @@ const extensions = {
   'json6': 'json6',
   'json': 'json6',
 }
-const typeFromExtension = file => extensions[ file.split('.').slice(-1).join().toLowerCase().trim() ] || 'json6'
+const typeFromExtension = file => extensions[ file.split( '.' ).slice( -1 ).join().toLowerCase().trim() ] || 'json6'
 
 const maybeFileType = options => Maybe.of( options.type ) // id functor hack
-    .map( type => (type || '').toLowerCase().trim() )
+    .map( type => ( type || '' ).toLowerCase().trim() )
     .map( type => type !== '' ?  type : typeFromExtension( options.file ) )
-    .chain( type => Object.keys(extensions).indexOf(type) < 0 ? Nothing : Just.of(type) )
+    .chain( type => Object.keys( extensions ).indexOf( type ) < 0 ? Nothing : Just.of( type ) )
 
-const readFile = file => fs.readFileSync(options.file,'utf8')
-const unWrapMaybeExitOnNothing = (maybe, message) => unWrapMaybe(maybe, () => badExit(message)) 
+const readFile = file => fs.readFileSync( options.file, 'utf-8' )
+const unWrapMaybeExitOnNothing = (maybe, message) => unWrapMaybe( maybe, () => badExit( message ) ) 
 
 // unpure 
 const getData = options => unWrapMaybeExitOnNothing( maybeFileType(options), 'Invalid file type' ) === 'yaml'
-    ? endOnFail( () => yaml.safeLoad(readFile(options.file)))
-    : endOnFail( () => json6.parse(readFile(options.file)))
+    ? endOnFail( () => yaml.safeLoad( readFile( options.file ) ) )
+    : endOnFail( () => json6.parse( readFile( options.file ) ) )
 
-console.log(getSqlQuery(getData(options)))
+console.log( 
+  getSqlQuery( getData( options ) ) 
+)
