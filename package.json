@@ -1,6 +1,6 @@
 {
   "name": "pg-nested-json-query",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "A tool to build Postgres queries that join nested queries into JSON structures",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "pg-nested-json-query": "pg-nested-json-query"
   },
   "bin": {
-    "pg-nested-json-query": "bin/pg-nested-json-query.js"
+    "pg-nested-json-query": "bin/pg-nested-json-query"
   },
   "keywords": [
     "postgresql",
