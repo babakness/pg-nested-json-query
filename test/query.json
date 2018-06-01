@@ -1,0 +1,29 @@
+{
+	"pages": {
+		"fields": {
+			"id": "page_id",
+			"name": "page_name"
+		},
+		"children": {
+			"page_content": {
+				"name": "contents",
+				"fields": {
+					"id": "page_content_id",
+					"name": "page_content_name"
+				}
+			}
+		},
+		"conditions": {
+			"active": true
+		}
+	},
+	"galleries": {
+		"fields": {
+			"id": "gallery_id",
+			"name": "gallery_name"
+		},
+		"conditions": {
+			"active": true
+		}
+	}
+}
