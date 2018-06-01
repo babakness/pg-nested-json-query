@@ -2,6 +2,23 @@ import test from 'ava';
 import getQuery from "../lib/get-query"
 import childProcess from "child_process";
 import path from 'path'
+import Promise from 'bluebird'
+
+const basePath = process.cwd()
+const kitchenSyncQueryPath = `${ basePath }/test/small-kitchen-sink-query.yaml`
+const jsonQueryPath = `${ basePath }/test/query.json`
+const yamlQueryPath = `${ basePath }/test/query.yaml`
+const cliPath = `${ basePath }/bin/pg-nested-json-query`
+
+
+const exec = Promise.promisify(childProcess.exec)
+const cliExec = cliPath => async filePath => (
+  (await exec( `/usr/bin/env node ${ cliPath } ${ filePath }` ))
+    .toString()
+    .trim()
+  )
+
+const queryCliExec = cliExec(cliPath)
 
 const expectedKitchenSyncOutput = `
 select json_build_object(
@@ -69,38 +86,32 @@ const query = {
   } 
 }
 
-const basePath = process.cwd()
-const kitchenSyncQueryPath = `${ basePath }/test/small-kitchen-sink-query.yaml`
-const jsonQueryPath = `${ basePath }/test/query.json`
-const yamlQueryPath = `${ basePath }/test/query.yaml`
-const cliPath = `${ basePath }/bin/pg-nested-json-query`
 
-
-test('Test sample query', t => {
+test('Test sample query', t => 
 	t.deepEqual( getQuery( query ).trim(), expectedSampleOutput )
-});
+)
 
 
-test('Test kitchen sink YAML example using CLI using `/usr/bin/env node`', t => {
+test('Test kitchen sink YAML example using CLI using `/usr/bin/env node`', async t => 
 	t.deepEqual(
-    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ kitchenSyncQueryPath }` ).toString().trim(), 
+    await queryCliExec(kitchenSyncQueryPath), 
     expectedKitchenSyncOutput
   )
-});
+)
 
 
-test('Test sample JSON query with CLI using `/usr/bin/env node`', t => {
+test('Test sample JSON query with CLI using `/usr/bin/env node`', async t =>
 	t.deepEqual(
-    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ jsonQueryPath }` ).toString().trim(), 
+    await queryCliExec(jsonQueryPath), 
     expectedSampleOutput
   )
-});
+)
 
-test('Test sample YAML query with CLI using `/usr/bin/env node`', t => {
+test('Test sample YAML query with CLI using `/usr/bin/env node`', async t =>
 	t.deepEqual(
-    childProcess.execSync( `/usr/bin/env node ${ cliPath } ${ yamlQueryPath }` ).toString().trim(), 
+    await queryCliExec(yamlQueryPath), 
     expectedSampleOutput
   )
-});
+);
 
 
