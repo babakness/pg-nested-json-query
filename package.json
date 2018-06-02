@@ -1,6 +1,6 @@
 {
   "name": "pg-nested-json-query",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A tool to build Postgres queries that join nested queries into JSON structures",
   "main": "index.js",
   "scripts": {
@@ -40,6 +40,12 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "bluebird": "^3.5.1",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "nodemon": "^1.17.5"
   }
 }

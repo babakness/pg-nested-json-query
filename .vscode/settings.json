@@ -1,0 +1,8 @@
+{
+    "workbench.colorTheme": "Material-Theme-Darker",
+    "python.pythonPath": "/usr/local/bin/python3",
+    "javascript.validate.enable": false,
+    "eslint.enable": true,
+    "eslint.autoFixOnSave": true,
+    "editor.rulers": [100,132]
+}

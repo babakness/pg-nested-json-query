@@ -1,0 +1,34 @@
+{
+  "extends": ["standard"],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "no-multiple-empty-lines": "off",
+    "padded-blocks": "off",
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "eol-last": "off",
+    "space-in-parens": ["error", "always"],
+    "space-before-blocks": "off",
+    "comma-spacing": ["error", { "after": true }],
+    "no-return-assign": "off",
+    "space-before-function-paren": "off",
+    "array-bracket-spacing": ["error", "always"],
+    "computed-property-spacing": ["error", "always"],
+    "template-curly-spacing": ["error", "always"],
+    "func-call-spacing": "off",
+    "no-unused-expressions": "off",
+    "operator-linebreak": ["error", "before", { "overrides": { "=": "ignore" } }],
+    "no-debugger": "off",
+    "no-multi-spaces": [
+      "error",
+      {
+        "exceptions": {
+          "VariableDeclarator": true,
+          "Property": true,
+          "ImportDeclaration": true,
+          "BinaryExpression": false
+        }
+      }
+    ],
+    "semi": ["error", "never"]
+  }
+}

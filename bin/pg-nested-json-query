@@ -2,7 +2,8 @@
 
 // Initialize
 //
-require = require( 'esm' )( module )
+// eslint-disable-next-line
+require = require('esm')(module)
 const getSqlQuery = require( '../lib/get-query.js' ).default
 const fs = require( 'fs' )
 
@@ -15,49 +16,47 @@ const script = process.argv[ 1 ].split( '/' ).splice( -1 )[ 0 ]
 //
 const commandLineArgs = require( 'command-line-args' )
 const getUsage = require( 'command-line-usage' )
-const optionDefinitions = [
-  { 
-    name: 'file', 
-    type: String, 
-    multiple: false, 
-    typeLabel: '{underline file}',
-    description: "This is the default option and can be omitted.", 
-    defaultOption: true 
-  },
-  { 
-    name: 'type', 
-    alias: 't', 
-    type: String, 
-    description: 'Declare file format. Either "yaml", "json" or "json6".', 
-    typeLabel: '{underline type}',
-  },
-  { 
-    name: 'help', 
-    alias: 'h', 
-    description: 'Opens this help screen, all other options are ignored.', 
-  },
+const optionDefinitions = [ {
+  name: 'file',
+  type: String,
+  multiple: false,
+  typeLabel: '{underline file}',
+  description: 'This is the default option and can be omitted.',
+  defaultOption: true,
+},
+{
+  name: 'type',
+  alias: 't',
+  type: String,
+  description: 'Declare file format. Either "yaml", "json" or "json6".',
+  typeLabel: '{underline type}',
+},
+{
+  name: 'help',
+  alias: 'h',
+  description: 'Opens this help screen, all other options are ignored.',
+},
 
 ]
 
-const usage = getUsage([
-  {
-    header: 'Usage',
-    content: `{cyan ${ script }} query-file [options]`
-  },
-  {
-    header: 'Options',
-    optionList: optionDefinitions,
-    reverseNameOrder: true
-  },
+const usage = getUsage( [ {
+  header: 'Usage',
+  content: `{cyan ${ script }} query-file [options]`,
+},
+{
+  header: 'Options',
+  optionList: optionDefinitions,
+  reverseNameOrder: true,
+},
 
-])
+] )
 
 // Handle bad options
 const getOptions = optionDefinitions => {
   try {
-    return commandLineArgs(optionDefinitions)
-  } catch (e) {
-    if( e.name == 'UNKNOWN_OPTION' ) {
+    return commandLineArgs( optionDefinitions )
+  } catch ( e ) {
+    if ( e.name == 'UNKNOWN_OPTION' ) {
       console.log( `Option name '${ e.optionName }' is unknown.  Here is the help menu.` )
       console.log( usage )
     } else {
@@ -69,7 +68,7 @@ const getOptions = optionDefinitions => {
 
 const options = getOptions( optionDefinitions )
 
-if( options.help || ( !options.file && !process.stdout.isTTY ) )  {
+if ( options.help || ( !options.file && !process.stdout.isTTY ) ) {
   console.log( usage )
   process.exit()
 }
@@ -80,29 +79,41 @@ const trace = message => ( console.log( message ), message )
 const badExit = message => trace( message ) && process.exit( 1 )
 const errorEnding = obj => ( obj instanceof Error ) ? badExit( obj.message ) : badExit( obj )
 const tryCatch = failCallback => testCallback => {
-  try{
+  try {
     return testCallback()
-  } catch(e) {
+  } catch ( e ) {
     return failCallback( e )
   }
 }
 const endOnFail = tryCatch( errorEnding )
 
 // Ad-hoc Monad helpers
-class Identity { 
-  constructor( value ){ this.$value = value }
-  join(){ return this.$value }
-  map( fn ){ return Identity.of( fn( this.$value ) ) }
-  chain( fn ){ return this.map( fn ).join() } 
+class Identity {
+  constructor( value ) {
+    this.$value = value
+  }
+  join() {
+    return this.$value
+  }
+  map( fn ) {
+    return Identity.of( fn( this.$value ) )
+  }
+  chain( fn ) {
+    return this.map( fn ).join()
+  }
 }
-Identity.of = value => new Identity(value)
-const Nothing = { map: () => Nothing, join: () => Nothing, chain: () => Nothing }
+Identity.of = value => new Identity( value )
+const Nothing = {
+  map: () => Nothing,
+  join: () => Nothing,
+  chain: () => Nothing,
+}
 // Beware Just is instance of Identity
 class Just extends Identity {}
 const Maybe = Just
-const unWrapMaybe = (maybe, nothingCallback) => maybe === Nothing ? nothingCallback() : maybe.join()
+const unWrapMaybe = ( maybe, nothingCallback ) => maybe === Nothing ? nothingCallback() : maybe.join()
 
-// Core 
+// Core
 //
 const extensions = {
   'yml': 'yaml',
@@ -110,22 +121,29 @@ const extensions = {
   'json6': 'json6',
   'json': 'json6',
 }
-const typeFromExtension = file => extensions[ file.split( '.' ).slice( -1 ).join().toLowerCase().trim() ] || 'json6'
+const getFileExtension = file => file
+  .split( '.' )
+  .slice( -1 )
+  .join()
+  .toLowerCase()
+  .trim()
+
+const typeFromExtension = file => extensions[ getFileExtension( file ) ] || 'json6'
 
 const maybeFileType = options => Maybe.of( options.type ) // id functor hack
-    .map( type => ( type || '' ).toLowerCase().trim() )
-    .map( type => type !== '' ?  type : typeFromExtension( options.file ) )
-    .chain( type => Object.keys( extensions ).indexOf( type ) < 0 ? Nothing : Just.of( type ) )
+  .map( type => ( type || '' ).toLowerCase().trim() )
+  .map( type => type !== '' ? type : typeFromExtension( options.file ) )
+  .chain( type => Object.keys( extensions ).indexOf( type ) < 0 ? Nothing : Just.of( type ) )
 
 const readFile = file => fs.readFileSync( options.file, 'utf8' )
-const unWrapMaybeExitOnNothing = (maybe, message) => unWrapMaybe( maybe, () => badExit( message ) ) 
+const unWrapMaybeExitOnNothing = ( maybe, message ) => unWrapMaybe( maybe, () => badExit( message ) )
 
-// unpure 
-const getData = options => unWrapMaybeExitOnNothing( maybeFileType(options), 'Invalid file type' ) === 'yaml'
-    ? endOnFail( () => yaml.safeLoad( readFile( options.file ) ) )
-    : endOnFail( () => json6.parse( readFile( options.file ) ) )
+// unpure
+const getData = options => unWrapMaybeExitOnNothing( maybeFileType( options ), 'Invalid file type' ) === 'yaml'
+  ? endOnFail( () => yaml.safeLoad( readFile( options.file ) ) )
+  : endOnFail( () => json6.parse( readFile( options.file ) ) )
 
-if( process.stdout.isTTY ) {
+if ( process.stdout.isTTY ) {
 
   process.stdin.resume()
   process.stdin.setEncoding( 'utf8' )
@@ -135,22 +153,22 @@ if( process.stdout.isTTY ) {
     return accumelator
   }
   const onDataCallback = pipeReducer( [] )( ( acc, item ) => acc.concat( item ) )
-  process.stdin.on( 'data', onDataCallback );
-  process.stdin.on( 'end', function() {
-    const data = onDataCallback( [] ).join('')
+  process.stdin.on( 'data', onDataCallback )
+  process.stdin.on( 'end', function () {
+    const data = onDataCallback( [] ).join( '' )
     // Lazy way of guessing the piped data
-    const processed = tryCatch
-      ( () => json6.parse( data ) )
-      ( () => yaml.safeLoad( data ) ) 
+    /* eslint-disable */
+    const processed = tryCatch(() => json6.parse(data))
+      (() => yaml.safeLoad(data))
     // resolve data into query result or error message
     tryCatch
-      ( () => console.log( 'Could not parsed piped data as either YAML, JSON, or JSON6.' ) )
-      ( () => console.log( getSqlQuery( processed ) ) )
-    
-  })
+      (() => console.log('Could not parsed piped data as either YAML, JSON, or JSON6.'))
+      (() => console.log(getSqlQuery(processed)))
+    /* eslint-enable */
+  } )
 
 } else {
-  console.log( 
-    getSqlQuery( getData( options ) ) 
+  console.log(
+    getSqlQuery( getData( options ) )
   )
 }
