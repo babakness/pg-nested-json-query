@@ -42,32 +42,25 @@ Here is an example of a JSON query
 
 import getQuery from 'pg-nested-json-query'
 
-const page_contents = {
-  page_content: {
-    name: 'contents',
-    fields: {
-      id: 'page_content_id',
-      name: 'page_content_name',
+{
+const query = {
+  "table_name": {
+    "fields": {
+      "id": "table_id"
+    },
+    "children": {
+      "other_table": {
+        "fields": {
+          "id": "other_id"
+        }
+      }
+    },
+    "conditionString": "example_number = 1",
+    "conditions": {
+      "boolean_field": true,
+      "number_field": "> 5"
     }
   }
-}
-
-const query = {
-  pages: {
-    fields: {
-      id: 'page_id',
-      name: 'page_name',
-    },
-    children: page_contents,
-    conditions: { active: true },
-  },
-  galleries: {
-    fields: {
-      id: 'gallery_id',
-      name: 'gallery_name',
-    },
-    conditions: { active: true}
-  } 
 }
 
 
@@ -81,23 +74,15 @@ Output
 ```sql
 
 select json_build_object(
-  'pages', array(
+  'table_name', array(
     select json_build_object(
-      'id', pages.page_id,
-      'name', pages.page_name,
-      'contents', array(
+      'id', table_name.table_id,
+      'other_table', array(
         select json_build_object(
-          'id', page_content.page_content_id,
-          'name', page_content.page_content_name
-        ) from page_content where page_content.page_content_id = pages.page_id
+          'id', other_table.other_id
+        ) from other_table where other_table.table_id = table_name.table_id
       )
-    ) from pages where pages.active = true
-  ),
-  'galleries', array(
-    select json_build_object(
-      'id', galleries.gallery_id,
-      'name', galleries.gallery_name
-    ) from galleries where galleries.active = true
+    ) from table_name where table_name.boolean_field = true and table_name.number_field > 5 and example_number = 1
   )
 )
 

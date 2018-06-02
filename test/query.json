@@ -1,15 +1,24 @@
 {
 	"pages": {
+		"id": "internal_pages_id",
+		"name": "database_table_name_for_pages",
 		"fields": {
-			"id": "page_id",
 			"name": "page_name"
 		},
 		"children": {
-			"page_content": {
-				"name": "contents",
+			"contents": {
+				"name": "page_contents",
+				"parentId": "custom_foreign_key_id",
 				"fields": {
-					"id": "page_content_id",
 					"name": "page_content_name"
+				},
+				"children": {
+					"content_child": {
+						"parentId": "parent_id",
+						"fields": {
+							"test": "test_field"
+						}
+					}
 				}
 			}
 		},

@@ -69,7 +69,7 @@ const getOptions = optionDefinitions => {
 
 const options = getOptions( optionDefinitions )
 
-if( options.help || !options.file ) {
+if( options.help || ( !options.file && !process.stdout.isTTY ) )  {
   console.log( usage )
   process.exit()
 }
@@ -117,7 +117,7 @@ const maybeFileType = options => Maybe.of( options.type ) // id functor hack
     .map( type => type !== '' ?  type : typeFromExtension( options.file ) )
     .chain( type => Object.keys( extensions ).indexOf( type ) < 0 ? Nothing : Just.of( type ) )
 
-const readFile = file => fs.readFileSync( options.file, 'utf-8' )
+const readFile = file => fs.readFileSync( options.file, 'utf8' )
 const unWrapMaybeExitOnNothing = (maybe, message) => unWrapMaybe( maybe, () => badExit( message ) ) 
 
 // unpure 
@@ -125,6 +125,32 @@ const getData = options => unWrapMaybeExitOnNothing( maybeFileType(options), 'In
     ? endOnFail( () => yaml.safeLoad( readFile( options.file ) ) )
     : endOnFail( () => json6.parse( readFile( options.file ) ) )
 
-console.log( 
-  getSqlQuery( getData( options ) ) 
-)
+if( process.stdout.isTTY ) {
+
+  process.stdin.resume()
+  process.stdin.setEncoding( 'utf8' )
+
+  const pipeReducer = accumelator => reducer => item => {
+    accumelator = reducer( accumelator, item )
+    return accumelator
+  }
+  const onDataCallback = pipeReducer( [] )( ( acc, item ) => acc.concat( item ) )
+  process.stdin.on( 'data', onDataCallback );
+  process.stdin.on( 'end', function() {
+    const data = onDataCallback( [] ).join('')
+    // Lazy way of guessing the piped data
+    const processed = tryCatch
+      ( () => json6.parse( data ) )
+      ( () => yaml.safeLoad( data ) ) 
+    // resolve data into query result or error message
+    tryCatch
+      ( () => console.log( 'Could not parsed piped data as either YAML, JSON, or JSON6.' ) )
+      ( () => console.log( getSqlQuery( processed ) ) )
+    
+  })
+
+} else {
+  console.log( 
+    getSqlQuery( getData( options ) ) 
+  )
+}
