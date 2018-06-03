@@ -7,6 +7,7 @@
     "test": "ava",
     "test-watch": "npm run test -- --watch",
     "dev": "nodemon index.js",
+    "prepublishOnly": "npm run test",
     "pg-nested-json-query": "pg-nested-json-query"
   },
   "bin": {
