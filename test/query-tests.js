@@ -1,7 +1,7 @@
-import test from 'ava';
-import getQuery from "../lib/get-query"
-import childProcess from "child_process";
-import path from 'path'
+import test from 'ava'
+// import getQuery from '../lib/get-query'
+import childProcess from 'child_process'
+// import path from 'path'
 import Promise from 'bluebird'
 
 const basePath = process.cwd()
@@ -11,14 +11,14 @@ const yamlQueryPath = `${ basePath }/test/query.yaml`
 const cliPath = `${ basePath }/bin/pg-nested-json-query`
 
 
-const exec = Promise.promisify(childProcess.exec)
+const exec = Promise.promisify( childProcess.exec )
 const cliExec = cliPath => async filePath => (
-  (await exec( `/usr/bin/env node ${ cliPath } ${ filePath }` ))
+  ( await exec( `/usr/bin/env node ${ cliPath } ${ filePath }` ) )
     .toString()
     .trim()
-  )
+)
 
-const queryCliExec = cliExec(cliPath)
+const queryCliExec = cliExec( cliPath )
 
 const expectedKitchenSyncOutput = `
 select json_build_object(
@@ -61,26 +61,26 @@ select json_build_object(
 )
 `.trim()
 
-test('Test kitchen sink YAML example using CLI using `/usr/bin/env node`', async t => 
-	t.deepEqual(
-    await queryCliExec(kitchenSyncQueryPath), 
+test( 'Test kitchen sink YAML example using CLI using `/usr/bin/env node`', async t =>
+  t.deepEqual(
+    await queryCliExec( kitchenSyncQueryPath ),
     expectedKitchenSyncOutput
   )
 )
 
 
-test('Test sample JSON query with CLI using `/usr/bin/env node`', async t =>
-	t.deepEqual(
-    await queryCliExec(jsonQueryPath), 
+test( 'Test sample JSON query with CLI using `/usr/bin/env node`', async t =>
+  t.deepEqual(
+    await queryCliExec( jsonQueryPath ),
     expectedSampleOutput
   )
 )
 
-test('Test sample YAML query with CLI using `/usr/bin/env node`', async t =>
-	t.deepEqual(
-    await queryCliExec(yamlQueryPath), 
+test( 'Test sample YAML query with CLI using `/usr/bin/env node`', async t =>
+  t.deepEqual(
+    await queryCliExec( yamlQueryPath ),
     expectedSampleOutput
   )
-);
+)
 
 

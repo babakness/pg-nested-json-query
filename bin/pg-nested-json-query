@@ -32,6 +32,11 @@ const optionDefinitions = [ {
   typeLabel: '{underline type}',
 },
 {
+  name: 'pipe',
+  alias: 'p',
+  description: 'Used piped in data instead of reading from file.',
+},
+{
   name: 'help',
   alias: 'h',
   description: 'Opens this help screen, all other options are ignored.',
@@ -56,7 +61,7 @@ const getOptions = optionDefinitions => {
   try {
     return commandLineArgs( optionDefinitions )
   } catch ( e ) {
-    if ( e.name == 'UNKNOWN_OPTION' ) {
+    if ( e.name === 'UNKNOWN_OPTION' ) {
       console.log( `Option name '${ e.optionName }' is unknown.  Here is the help menu.` )
       console.log( usage )
     } else {
@@ -67,8 +72,10 @@ const getOptions = optionDefinitions => {
 }
 
 const options = getOptions( optionDefinitions )
-
-if ( options.help || ( !options.file && !process.stdout.isTTY ) ) {
+const hasKey = key => obj => Object.keys( obj ).includes( key )
+const hasPipe = hasKey( 'pipe' )
+if ( options.help || ( !options.file && !hasPipe( options ) ) ) {
+  // console.log( options )
   console.log( usage )
   process.exit()
 }
@@ -143,7 +150,7 @@ const getData = options => unWrapMaybeExitOnNothing( maybeFileType( options ), '
   ? endOnFail( () => yaml.safeLoad( readFile( options.file ) ) )
   : endOnFail( () => json6.parse( readFile( options.file ) ) )
 
-if ( process.stdout.isTTY ) {
+if ( hasPipe( options ) ) {
 
   process.stdin.resume()
   process.stdin.setEncoding( 'utf8' )
