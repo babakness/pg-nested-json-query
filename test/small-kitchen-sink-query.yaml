@@ -5,7 +5,19 @@ table_name:
     other_table:
       fields:
         id: other_id
+      where:
+        where_field: true
+      orderBy:
+        other_field: true
   conditionString: example_number = 1
   conditions:
     boolean_field: true
     number_field: "> 5"
+  orderBy:
+    sample_field: 1
+    sample2_field: true
+    sample3_field: 'asc'
+    example_field: -1
+    example2_field: false
+    example3_field: 'desc'
+
